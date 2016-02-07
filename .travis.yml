@@ -1,0 +1,23 @@
+# .travis.yml
+language: ruby
+rvm:
+  - 2.2.2
+env:
+  - DB=postgresql
+cache: bundler
+addons:
+  postgresql: "9.4"
+services:
+  - postgresql
+  - mongodb
+  - redis
+script:
+  - RAILS_ENV=test bundle exec rake teaspoon
+  - RAILS_ENV=test xvfb-run -a bundle exec rspec
+before_script:
+  - "sh -e /etc/init.d/xvfb start"
+  - cp config/database.travis.yml config/database.yml
+  - cp config/mongoid.travis.yml config/mongoid.yml
+  - RAILS_ENV=test bundle exec rake db:drop db:create db:migrate
+#  - sh -c "psql -c 'DROP DATABASE IF EXISTS adiq_dev;' -U postgres"
+#  - sh -c "psql -c 'DROP DATABASE IF EXISTS adiq_dev;' -U postgres"
