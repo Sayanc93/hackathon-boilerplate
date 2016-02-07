@@ -12,6 +12,7 @@ services:
   - mongodb
   - redis
 script:
+  - xvfb-run -a bundle exec rake parallel:prepare
   - xvfb-run -a bundle exec rake parallel:spec
 before_script:
   - "sh -e /etc/init.d/xvfb start"
