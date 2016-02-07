@@ -12,7 +12,7 @@ services:
   - mongodb
   - redis
 script:
-  - xvfb-run -a bundle exec parallel:spec
+  - xvfb-run -a bundle exec rake parallel:spec
 before_script:
   - "sh -e /etc/init.d/xvfb start"
   - cp config/database.travis.yml config/database.yml
