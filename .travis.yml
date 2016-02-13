@@ -21,7 +21,7 @@ branches:
   - master
 script:
 - RAILS_ENV=test xvfb-run -a bundle exec rake parallel:spec
-before_install: gem install travis_dedup && travis-dedup Sayanc93/hackathon-boilerplate $TRAVIS_ACCESS_TOKEN --pro
+before_install: gem install travis_dedup && travis-dedup hackathon-boilerplate $TRAVIS_ACCESS_TOKEN --pro
 before_script:
 - sh -e /etc/init.d/xvfb start
 - cp config/database.travis.yml config/database.yml
