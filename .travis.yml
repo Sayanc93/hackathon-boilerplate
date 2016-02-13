@@ -1,24 +1,29 @@
-# .travis.yml
 language: ruby
 rvm:
-  - 2.2.2
+- 2.2.2
 env:
-  - DB=postgresql
+- DB=postgresql
 cache: bundler
 addons:
-  postgresql: "9.4"
+  postgresql: '9.4'
+notifications:
+  slack:
+    secure: QpfQp3y/XUBaKnXRFLsl8lP3YFTfcKCbaW00/MaGMLfgjp+emNE46uyu4afKQN03+DZHw+FwKRxvbH44vXplFS8bImfbfWCQsjEGLAC9y0PJltEvdkaINWBivDqywJ3Wqw/OzE9Bryxk4WwQeHXR95A+kI1rtzVGszgnZXNm6KIHLPNGDnoTBevCRxKiiP4FOwovZSHyyeRwB6pRfSawN4gXsHNTewuQKWGQIY4vJxAKg3/4RAFUE7bd34oxLHo2w/CwOjSM3WcMjOiF0PlAOm4kLlPNVY8dgrT45V39qU9VmKGxaYg9xXVaUU6c47G1bkZFcZ15Lydzq5mQW9AIzGAIuqOll7Q5kQMQ5oHd6nQs67DDftsHzgfUOqzpoiYtENhEZsHgT5uaIYds2J4/QZQSei9bwqKVvBa98LUVjsCGVYb3WkVgpsYPbcPX7IEx5BDjWTYl2LIT1W+WOCOX9cFD8+fOsmh/7PNy5v/h7qna/FPdrSecAzJ80qusoc8dkIK5xEeFOTlBZcNon6rYQaUZf3d/0AfECq8xOGb1FJ//skxua86kHTzpUPGxc5L3ZsphkBdGZleLFxCJj8r7PXGhS4lTpvOjwkoPGGgYZln0/6qPqkiu15g/Yln0FYQDq/D6ZyHDd/pBVl6YnD2HblXirZBnaMt8D7MDCHJpDls=
 services:
-  - postgresql
-  - mongodb
-  - redis
+- postgresql
+- mongodb
+- redis
+branches:
+  only:
+  - master
 script:
-  - xvfb-run -a bundle exec rake parallel:prepare[1]
-  - xvfb-run -a bundle exec rake parallel:spec
+# - RAILS_ENV=test bundle exec rake teaspoon
+- RAILS_ENV=test xvfb-run -a bundle exec rake parallel:spec
+# before_install: gem install travis_dedup && travis-dedup your_org/your_repo $TRAVIS_ACCESS_TOKEN --pro
 before_script:
-  - "sh -e /etc/init.d/xvfb start"
-  - cp config/database.travis.yml config/database.yml
-  # - cp config/mongoid.travis.yml config/mongoid.yml
-  - bundle exec rake db:drop db:create db:migrate
-  # - RAILS_ENV=test parallel:prepare
-#  - sh -c "psql -c 'DROP DATABASE IF EXISTS adiq_dev;' -U postgres"
-#  - sh -c "psql -c 'DROP DATABASE IF EXISTS adiq_dev;' -U postgres"
+# - travis encrypt TRAVIS_ACCESS_TOKEN=5luIKoNXdsUdG8v7wMr-Pw
+- sh -e /etc/init.d/xvfb start
+- cp config/database.travis.yml config/database.yml
+# - cp config/mongoid.travis.yml config/mongoid.yml
+- export PARALLEL_TEST_PROCESSORS=4
+- bundle exec rake parallel:create parallel:load_schema parallel:prepare db:mongoid:purge
