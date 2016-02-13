@@ -2,7 +2,10 @@ language: ruby
 rvm:
 - 2.2.2
 env:
-- DB=postgresql
+  matrix:
+  - DB=postgresql
+  global:
+    secure: SCbF4HwTIFHbCUXKwI2Ni6X2VPH1u6eM/90H3zA+iyEM99j+CHSqv9b+4rv6x1YLzlr6Z9yGE10WaJX04SKJRUGKGr0SnOKrhyRvXddlaEu1k3A40FOmerO+qZBTdfvy9RbxGJyElWT6vVhLH31/q940JNuXpKtObjMzpEV7kqPy+zxctURuKjfuvtL+CSF7iYvcooVvaU8jKd+St8KRZCbxtCqZ7SRYkUDryrtLi17cY9P0dbiyzTWor2JjkzEH8K+yW39U3vFd0qOrMzdlFDH5/E65pSQOdwSzyO/peZVzeKMoeE2hBuz5UIEcPzHGlsiB92vxTE+NX1mHMS3490em/ocCHkuM+KWcMCKk4L2rDCYrtt9IMJTEIeugCOqaRXkkKnql11GkpSrYHx+OTmL2PB4RetqF3Q/MP3OursIKmw9U5JkmB0wj4RQuuxD4qil463etdyIw7IQeNaV9QPtfX86V/vzji+AEeVUZ+Eds5q+0rWqxiHQgkvj4MWsCUUsl1YDwYKBRpz9r/grTRHXSgkiP4IntUg0BuoOzVOXSW+T2NyzlqthVg3Y3iVmi0kF8EfC1zSr5SMLJ+1eIha7nq3+I5ded9pJJMuHZ9jHaFL3JKeVyq+PVsURSVMN+VSO8+KMC0pDAtRbLjD6MACfdrPNflWO7+9MXW4ZX0l4=
 cache: bundler
 addons:
   postgresql: '9.4'
@@ -17,13 +20,11 @@ branches:
   only:
   - master
 script:
-# - RAILS_ENV=test bundle exec rake teaspoon
 - RAILS_ENV=test xvfb-run -a bundle exec rake parallel:spec
-# before_install: gem install travis_dedup && travis-dedup your_org/your_repo $TRAVIS_ACCESS_TOKEN --pro
+before_install: gem install travis_dedup && travis-dedup Sayanc93/hackathon-boilerplate
+  $TRAVIS_ACCESS_TOKEN --pro
 before_script:
-# - travis encrypt TRAVIS_ACCESS_TOKEN=5luIKoNXdsUdG8v7wMr-Pw
 - sh -e /etc/init.d/xvfb start
 - cp config/database.travis.yml config/database.yml
-# - cp config/mongoid.travis.yml config/mongoid.yml
 - export PARALLEL_TEST_PROCESSORS=4
 - bundle exec rake parallel:create parallel:load_schema parallel:prepare
