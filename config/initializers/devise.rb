@@ -1,7 +1,7 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
-  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+  # OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
   config.omniauth :facebook, "166475367023450", "5c7a4708a8b1064f5ac117c24dcd7d87", scope: 'email', info_fields: 'email'
   config.omniauth :google_oauth2, "601862621975-e45hu6ne8cemer5sjn1s6t7dcvgujlrj.apps.googleusercontent.com", "f_7Odcu-yk2glM-22Jaji1BJ"
   # The secret key used by Devise. Devise uses this key to generate
